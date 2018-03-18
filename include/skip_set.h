@@ -2,43 +2,109 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <string>
 
 
-// Node for Skipset
-template<typename V>
+// Node
+template<typename T>
 class skip_set_node {
 public:
-    V value;
-    skip_set_node** forward;
-    // skip_set_node<V, maxlvl> *forward[maxlvl+1]; //pointer to array of skip_set_node with size MAXLEVEL
-
-    explicit skip_set_node(int lvl, V value);   
-    // virtual ~skip_set_node();
+    T value;
+    skip_set_node **forward;
+    int lvl;
+    explicit skip_set_node(int lvl, T value);   
+    virtual ~skip_set_node();
 };
 
-// template<typename V>
-// struct node {
-//     V* value;
-//     // int maxlevel;
-//     std::vector<node*> forward;
-//     node (V* value, int level);
-// };
+template <typename T>
+skip_set_node<T>::skip_set_node(int lvl, T value)
+    :value(value), forward(nullptr), lvl(lvl) {
+    std::cout << "value is " << value << std::endl;
+    forward = new skip_set_node<T>*[lvl];
+    for (int i = 0; i < lvl; i++) {
+        forward[i] = nullptr;
+        // std::cout << i << std::endl;
+    }
+}  
+
+template <typename T>
+skip_set_node<T>::~skip_set_node(){
+    for (int i = 0; i < lvl; i++)
+        delete forward[i];
+    delete[] forward;
+}
 
 
-// template<typename T, const int MAXLEVEL=4>
-// class skip_set {
-// public:
-//     explicit skip_set();
-//     ~skip_set();
+
+// Set
+template<typename T, const int MAXLEVEL=4>
+class skip_set {
+public:
+    // explicit skip_set();
+    explicit skip_set(){
+        level = MAXLEVEL;
+        head = new skip_set_node<T>*[level];
+        tail = new skip_set_node<T>*[level];
+        for (int i = 0; i < level; i++) {
+            head[i] = nullptr;
+            tail[i] = nullptr;
+        }
+    }
+
+    ~skip_set(){
+        // for (int i = 0; i < lvl; i++)
+        //     delete head[i];
+        // delete[] head; 
+    }
     
-//     int size() const;
-//     bool find(T value);
-//     void insert(T value);
-//     bool erase(T value);
+    int size() const{
+        int counter = 0;
+        skip_set_node<T> *help;
+        help = head[0];
+        while(help != nullptr) {
+            counter++;
+            help = help->forward[0];
+        }
 
-// private:
-//     skip_set_node* head;
-//     skip_set_node* tail;
-//     int level;
+        return counter;
+    }   
 
-// };
+    bool find(T value);
+
+    void insert(T value){
+        skip_set_node* n;
+        d = new skip_set_node<T>(MAXLEVEL, value);
+        // head[0]= d;     // CONTINUE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
+
+    bool erase(T value);
+
+private:
+    // skip_set_node<T>* head;
+    // skip_set_node<T>* tail;
+    skip_set_node<T> **head;
+    skip_set_node<T> **tail;
+    int level;
+
+};
+
+
+// bool skip_set::find(T value){
+//     skip_set_node *help;
+//     help = head;
+//     for (int i = level - 1; i >=0; i--) {
+//         while(help->forward[i]->key < value) {
+//             help = help->forward[i];
+//         } 
+//     }
+//     help = forward[0];
+//     if(help->value = value) {
+//         return value;
+//     } else {
+//         return nullptr;
+//         cout << "not found" << endl;
+//     }
+// }
+
+// void skip_set::insert(T value){}
+// bool skip_set::erase(T value){}

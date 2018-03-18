@@ -9,17 +9,13 @@
 using namespace std;
 
 // Node for Skipset
-template <typename V>
-skip_set_node<V>::skip_set_node(int lvl, V value)
-    :value(value), forward(nullptr) {
 
-    cout << value << endl;
     // skip_set_node<V> *forw[lvl+1];
     // for (int i = 1; i <= lvl; i++) {
     //     forward[i] = nullptr;
     // }
     // forward = forw;
-}  
+// }  
 
 // template <typename V>
 // skip_set_node::~skip_set_node(){
