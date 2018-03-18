@@ -1,0 +1,6 @@
+*.exe
+Makefile
+*.json
+.vscode
+*.o
+*.cpp-*
