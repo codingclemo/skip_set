@@ -26,6 +26,7 @@ int main() {
     skip_set<string, 3> setTest1;
     int y = setTest1.size();
     cout << y << endl;
+    setTest1.insert("zwei");
 
     return 0;
 }

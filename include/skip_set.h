@@ -46,8 +46,8 @@ public:
         head = new skip_set_node<T>*[level];
         tail = new skip_set_node<T>*[level];
         for (int i = 0; i < level; i++) {
-            head[i] = nullptr;
             tail[i] = nullptr;
+            head[i] = tail[i];
         }
     }
 
@@ -59,22 +59,36 @@ public:
     
     int size() const{
         int counter = 0;
-        skip_set_node<T> *help;
-        help = head[0];
-        while(help != nullptr) {
-            counter++;
-            help = help->forward[0];
-        }
+        // not really working
+        // skip_set_node<T> *help;
+        // help = head[0];
+        // while(help != nullptr) {
+        //     counter++;
+        //     help = help->forward[0];
+        // }
 
         return counter;
     }   
 
-    bool find(T value);
+    bool find(T value){
+        return false;
+    }
 
     void insert(T value){
-        skip_set_node* n;
-        d = new skip_set_node<T>(MAXLEVEL, value);
-        // head[0]= d;     // CONTINUE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if(find(value)) return;
+        //create new node
+        skip_set_node<T> *n;
+        n = new skip_set_node<T>(level, value);
+
+        //insert
+        
+
+        // std::cout << value << std::cout;
+
+        // create node and insert
+        // skip_set_node* n;
+        // d = new skip_set_node<T>(MAXLEVEL, value);
+
     }
 
     bool erase(T value);
