@@ -6,9 +6,7 @@
 using namespace std;
 
 int main() {
-    cout << "world hi" << endl;
 
-  
     // int x1 = 24;
     // int x2 = 42;
     // double x1 = 2.4;
@@ -28,6 +26,7 @@ int main() {
     setTest1.insert(20);    
     setTest1.insert(30);
     setTest1.insert(13);
+    setTest1.insert(10);
     setTest1.printSet();
     int y = setTest1.size();
     cout << "size: " << y << endl;

@@ -34,7 +34,7 @@ skip_set_node<T>::skip_set_node(int lvl)
 template <typename T>
 skip_set_node<T>::skip_set_node(int lvl, T value)
     :value(value), forward(nullptr), lvl(lvl) {
-    std::cout << "****\tnew node\t**** " << std::endl;
+    std::cout << "****\tcreate new node\t\t**** " << std::endl;
     std::cout << "\tValue: " << value << std::endl;    
     std::cout << "\tLevel: " << lvl << std::endl;
     forward = new skip_set_node<T>*[lvl];
@@ -118,7 +118,7 @@ public:
     }
 
     void insert(T value){
-        // if(find(value)) return;
+        // if(this->find(value)) {return;}
 
         //create update
         skip_set_node<T> *update;
