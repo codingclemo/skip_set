@@ -20,13 +20,22 @@ int main() {
     // cout << *y << endl;
     // skip_set_node<int> testnode1(4, x1);
     // skip_set_node<int> testnode2(4, x2);
-    skip_set_node<string> testnode1(4, x1);
-    skip_set_node<string> testnode2(4, x2);
+    // skip_set_node<string> testnode1(4, x1);
+    // skip_set_node<string> testnode2(4, x2);
 
-    skip_set<string, 3> setTest1;
+    skip_set<int, 5> setTest1;
+    setTest1.insert(10);
+    setTest1.insert(20);    
+    setTest1.insert(30);
+    setTest1.insert(13);
+    setTest1.printSet();
     int y = setTest1.size();
-    cout << y << endl;
-    setTest1.insert("zwei");
+    cout << "size: " << y << endl;
 
+    if (setTest1.find(20)) {cout << "20 found" << endl;} else {cout << "20 not found" << endl; }
+    if (setTest1.find(25)) {cout << "25 found" << endl;} else {cout << "25 not found" << endl; }
+    // for (int i = 0; i < 5; i++) {
+    //     cout << setTest1.randomLevel() << endl;
+    // }
     return 0;
 }
