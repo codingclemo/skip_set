@@ -36,5 +36,19 @@ int main() {
     // for (int i = 0; i < 5; i++) {
     //     cout << setTest1.randomLevel() << endl;
     // }
+
+    // erase test
+    // bool erased;
+    for (int i = 20; i < 22; i++) {
+        if(setTest1.erase(i)) { 
+            cout << i << " was erased" << endl;
+        } else {
+            cout << i <<" was not erased" << endl;
+        }
+    }
+
+
+    setTest1.printSet();
+    cout << "fin" << endl;
     return 0;
 }

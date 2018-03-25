@@ -46,8 +46,8 @@ skip_set_node<T>::skip_set_node(int lvl, T value)
 
 template <typename T>
 skip_set_node<T>::~skip_set_node(){
-    for (int i = 0; i < lvl; i++)
-        delete forward[i];
+    // for (int i = 0; i < lvl; i++)
+    //     delete forward[i];
     delete[] forward;
 }
 
@@ -65,7 +65,7 @@ void skip_set_node<T>::printForward(){
 
 
 // Set
-template<typename T, const int MAXLEVEL=4>
+template<typename T, const int MAXLEVEL=10>
 class skip_set {
 public:
     // explicit skip_set();
@@ -85,9 +85,14 @@ public:
     }
 
     ~skip_set(){
-        // for (int i = 0; i < lvl; i++)
-        //     delete head[i];
-        // delete[] head; 
+        skip_set_node<T> *n, *help;
+        n = head;
+        while (n != nullptr) {
+            help = n->forward[0];
+            delete n;
+            n = help;
+        }
+        std::cout << "set deleted" << std::endl;
     }
     
     int size() const{
@@ -113,6 +118,7 @@ public:
             } 
         }
         n = n->forward[0];
+
         return (n->value == value);
         // return false;
     }
@@ -158,11 +164,50 @@ public:
                 newNode->forward[i] = update->forward[i]->forward[i];
                 update->forward[i]->forward[i] = newNode;
             }
-        
         } //endelse
     }
 
-    bool erase(T value);
+    bool erase(T value) {
+        //create update
+        skip_set_node<T> *update;
+        update = new skip_set_node<T>(level);
+
+        //create iterator
+        skip_set_node<T> *n;
+        n = head;
+        
+        //collect pointers to predecessors
+        for (int i = level-1; i >= 0; i--) {
+            while (n->forward[i] != nullptr && n->forward[i]->value < value) {
+                n = n->forward[i];
+            }
+            update->forward[i] = n;
+        }
+        n = n->forward[0]; // set pointer to the supposed to-delete node
+
+        if (n != nullptr && n->value == value) { // node exists and must be erased
+            for (int i = 0; i < level; i++) { // checks not only up to the level of the node, but to the max level
+                if (update->forward[i]->forward[i] != n) {
+                    break;
+                } else {
+                    update->forward[i]->forward[i] = n->forward[i]; //redirect pointers to successors of to-delete-node
+                }
+            }
+            
+            delete n;
+            delete update;
+
+            //check if the set-level needs to be reduced
+            n = head;
+            while (level > 1 && n->forward[level] == nullptr) {  
+                level--;
+            }
+            return true;
+        } else { // node does not exist
+            // std::cerr << "Node does not exist, no node is deleted" << std::endl;
+            return false;
+        } //endelse
+    }
 
     int randomLevel(){
         int level = 1;
@@ -190,26 +235,3 @@ private:
     int level;
 
 };
-
-
-
-
-// bool skip_set::find(T value){
-//     skip_set_node *help;
-//     help = head;
-//     for (int i = level - 1; i >=0; i--) {
-//         while(help->forward[i]->key < value) {
-//             help = help->forward[i];
-//         } 
-//     }
-//     help = forward[0];
-//     if(help->value = value) {
-//         return value;
-//     } else {
-//         return nullptr;
-//         cout << "not found" << endl;
-//     }
-// }
-
-// void skip_set::insert(T value){}
-// bool skip_set::erase(T value){}
