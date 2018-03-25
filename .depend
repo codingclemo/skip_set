@@ -1,2 +1,2 @@
-main.o: src/main.cpp include/skip_set.h
+main.o: src/main.cpp include/skip_set_forward.h
 skip_set.o: src/skip_set.cpp include/skip_set.h
