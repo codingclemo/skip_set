@@ -12,6 +12,7 @@ class skip_set_node {
 public:
     T value;
     skip_set_node **forward;
+    skip_set_node *back;
     int lvl;
     explicit skip_set_node(int lvl);  
     explicit skip_set_node(int lvl, T value);   
@@ -27,7 +28,7 @@ public:
 
 template <typename T>
 skip_set_node<T>::skip_set_node(int lvl)
-    :forward(nullptr), lvl(lvl) {
+    :forward(nullptr), back(nullptr), lvl(lvl) {
     forward = new skip_set_node<T>*[lvl];
     for (int i = 0; i < lvl; i++) {
         forward[i] = nullptr;
@@ -36,7 +37,7 @@ skip_set_node<T>::skip_set_node(int lvl)
 
 template <typename T>
 skip_set_node<T>::skip_set_node(int lvl, T value)
-    :value(value), forward(nullptr), lvl(lvl) {
+    :value(value), forward(nullptr), back(nullptr), lvl(lvl) {
     std::cout << "****\tcreate new node\t\t**** " << std::endl;
     std::cout << "\tValue: " << value << std::endl;    
     std::cout << "\tLevel: " << lvl << std::endl;
@@ -61,6 +62,12 @@ void skip_set_node<T>::printForward(){
             std::cout << "\t[" << i << "]: " << forward[i]->value << std::endl;
         }
     }
+    if (back == nullptr) {
+        std::cout << "\t[back]: " << "nullptr" << std::endl;
+    } else {
+        std::cout << "\t[back]: " << back->value << std::endl;
+    }
+    
 }
 
 
@@ -104,6 +111,17 @@ public:
         return it; 
     }
 
+    skip_set_iterator & operator-- () {
+        n = n->back;
+        return *this;
+    } 
+
+    skip_set_iterator operator--(int){
+        skip_set_iterator it(*this); 
+        operator--(); 
+        return it; 
+    }
+
     T & operator*(){
         return n->value;
     }
@@ -135,14 +153,18 @@ public:
         return iterator(head->forward[0]);
     }
     iterator end() {
-        skip_set_node<T>* n;
-        n = head;
-        while (n->forward[0] != nullptr) {
-            n = n->forward[0];
-        }
-        return iterator(n);
+        return iterator(tail);
     }
 
+    iterator rbegin() const {
+        return iterator(tail->back);        
+        // return end();
+    }
+
+    iterator rend() {
+        return iterator(head);
+        // return begin();
+    }
 
     explicit skip_set(){
         level = MAXLEVEL;
@@ -152,6 +174,7 @@ public:
             head->forward[i] = tail; // by default, head points to tail
             tail->forward[i] = nullptr;  // by default, tail points to nullptr
         }
+        tail->back = head;
     }
 
     ~skip_set(){
@@ -224,12 +247,13 @@ public:
             //create new node   
             skip_set_node<T> *newNode;
             newNode = new skip_set_node<T>(randLvl, value);
-            // std::cout << "weird" << std::endl;
             
             for (int i = 0; i < randLvl; i++) {
                 newNode->forward[i] = update->forward[i]->forward[i];
                 update->forward[i]->forward[i] = newNode;
             }
+            newNode->back = update->forward[0]; // redirect back of new node
+            newNode->forward[0]->back = newNode; // redirect back of successor of new node
         } //endelse
     }
 
@@ -260,12 +284,13 @@ public:
                 }
             }
             
+            update->forward[0]->forward[0]->back = update->forward[0]; // added for bidirectional iterator
+
             delete n;
             delete update;
 
             //check if the set-level needs to be reduced
-            n = head;
-            while (level > 1 && n->forward[level] == tail) {  
+            while (level > 1 && head->forward[level] == tail) {  
                 level--;
             }
             return true;
