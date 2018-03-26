@@ -23,11 +23,9 @@ public:
 template <typename T>
 skip_set_node<T>::skip_set_node(int lvl)
     :forward(nullptr), lvl(lvl) {
-    // std::cout << "value is not defined "<< std::endl;
     forward = new skip_set_node<T>*[lvl];
     for (int i = 0; i < lvl; i++) {
         forward[i] = nullptr;
-        // std::cout << i << std::endl;
     }
 }  
 
@@ -41,13 +39,10 @@ skip_set_node<T>::skip_set_node(int lvl, T value)
     for (int i = 0; i < lvl; i++) {
         forward[i] = nullptr;
     }
-    // printForward();
 }  
 
 template <typename T>
 skip_set_node<T>::~skip_set_node(){
-    // for (int i = 0; i < lvl; i++)
-    //     delete forward[i];
     delete[] forward;
 }
 
@@ -68,20 +63,12 @@ void skip_set_node<T>::printForward(){
 template<typename T, const int MAXLEVEL=10>
 class skip_set {
 public:
-    // explicit skip_set();
     explicit skip_set(){
         level = MAXLEVEL;
         head = new skip_set_node<T>(level);
         for (int i = 0; i < level; i++) {
             head->forward[i] = nullptr;
         }
-
-        // head = new skip_set_node<T>*[level];
-        // tail = new skip_set_node<T>*[level];
-        // for (int i = 0; i < level; i++) {
-        //     tail[i] = nullptr;
-        //     head[i] = tail[i];
-        // }
     }
 
     ~skip_set(){
@@ -97,7 +84,6 @@ public:
     
     int size() const{
         int counter = 0;
-        // not really working
         skip_set_node<T> *help;
         help = head->forward[0];
         while(help != nullptr) {
@@ -120,12 +106,9 @@ public:
         n = n->forward[0];
 
         return (n->value == value);
-        // return false;
     }
 
     void insert(T value){
-        // if(this->find(value)) {return;}
-
         //create update
         skip_set_node<T> *update;
         update = new skip_set_node<T>(level);
@@ -158,13 +141,12 @@ public:
             //create new node   
             skip_set_node<T> *newNode;
             newNode = new skip_set_node<T>(randLvl, value);
-            // std::cout << "weird" << std::endl;
             
             for (int i = 0; i < randLvl; i++) {
                 newNode->forward[i] = update->forward[i]->forward[i];
                 update->forward[i]->forward[i] = newNode;
             }
-        } //endelse
+        }
     }
 
     bool erase(T value) {
@@ -204,9 +186,8 @@ public:
             }
             return true;
         } else { // node does not exist
-            // std::cerr << "Node does not exist, no node is deleted" << std::endl;
             return false;
-        } //endelse
+        }
     }
 
     int randomLevel(){
@@ -231,7 +212,5 @@ public:
 
 private:
     skip_set_node<T> *head;
-    // skip_set_node<T> *tail;
     int level;
-
 };

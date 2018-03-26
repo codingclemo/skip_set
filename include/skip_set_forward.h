@@ -18,16 +18,19 @@ public:
     virtual ~skip_set_node();
 
     virtual void printForward();
+
+    friend std::ostream & operator<<(std::ostream &os, const skip_set_node<T> & node){
+        os << node.value;
+        return os; 
+    }   
 };
 
 template <typename T>
 skip_set_node<T>::skip_set_node(int lvl)
     :forward(nullptr), lvl(lvl) {
-    // std::cout << "value is not defined "<< std::endl;
     forward = new skip_set_node<T>*[lvl];
     for (int i = 0; i < lvl; i++) {
         forward[i] = nullptr;
-        // std::cout << i << std::endl;
     }
 }  
 
@@ -41,13 +44,10 @@ skip_set_node<T>::skip_set_node(int lvl, T value)
     for (int i = 0; i < lvl; i++) {
         forward[i] = nullptr;
     }
-    // printForward();
 }  
 
 template <typename T>
 skip_set_node<T>::~skip_set_node(){
-    // for (int i = 0; i < lvl; i++)
-    //     delete forward[i];
     delete[] forward;
 }
 
@@ -68,15 +68,22 @@ void skip_set_node<T>::printForward(){
 template<typename T, const int MAXLEVEL=10>
 class skip_set {
 public:
-    typedef skip_set_iterator<skip_set_node> iterator;
-    iterator find(T value);
-    iterator begin(){
-        skip_set_node<T>* it;
-        it = head;
-        return it;
+    typedef skip_set_iterator<T> iterator;
+    iterator find(T value) {
+        
     }
-    iterator end();
 
+    iterator begin() const {
+        return iterator(head->forward[0]);
+    }
+    iterator end() {
+        skip_set_node<T>* n;
+        n = head;
+        while (n->forward[0] != nullptr) {
+            n = n->forward[0];
+        }
+        return iterator(n);
+    }
 
 
     explicit skip_set(){
@@ -245,3 +252,57 @@ private:
     int level;
 
 };
+
+
+// Iterator inside skip_set
+template<typename T>
+class skip_set_iterator {
+private:
+    skip_set_node<T>* n;
+public:
+    skip_set_iterator() = delete; //dunno why
+    skip_set_iterator(skip_set_node<T>* it) 
+        : n(it) {
+            std::cout << "skip_set_iterator  constructor " << std::endl;
+    }
+
+    skip_set_iterator(const skip_set_iterator &it)
+        : n(it.n) {  
+    }   
+
+    ~skip_set_iterator() {
+        std::cout << "destructor skip_set_iterator "  << std::endl;
+    };
+
+    // operator for forward iterator
+    bool operator == (const skip_set_iterator &it){
+        return n == it.n;
+    }
+
+    bool operator != (const skip_set_iterator &it) {
+        return n != it.n;
+    }
+
+    // pre increment
+    skip_set_iterator & operator++ () {
+        n = n->forward[0];
+        return *this;
+    } 
+
+    // post increment
+    skip_set_iterator operator++(int){
+        skip_set_iterator it(*this); 
+        operator++(); 
+        return it; 
+    }
+
+    T & operator*(){
+        return n->value;
+    }
+
+    friend std::ostream & operator << (std::ostream &os, const skip_set_iterator &it) {
+        os << *(it.n);
+        return os; 
+    }
+};
+

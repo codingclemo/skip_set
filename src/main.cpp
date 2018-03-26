@@ -28,8 +28,7 @@ int main() {
     setTest1.insert(13);
     setTest1.insert(10);
     setTest1.printSet();
-    int y = setTest1.size();
-    cout << "size: " << y << endl;
+    cout << "setTest1 size is: " << setTest1.size() << endl;
 
     if (setTest1.find(20)) {cout << "20 found" << endl;} else {cout << "20 not found" << endl; }
     if (setTest1.find(25)) {cout << "25 found" << endl;} else {cout << "25 not found" << endl; }
@@ -47,6 +46,7 @@ int main() {
         }
     }
 
+    cout << "setTest1 size is: " << setTest1.size() << endl;
 
     setTest1.printSet();
     cout << "fin" << endl;
