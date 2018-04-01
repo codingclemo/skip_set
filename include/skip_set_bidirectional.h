@@ -295,7 +295,7 @@ public:
             }
             return true;
         } else { // node does not exist
-            // std::cerr << "Node does not exist, no node is deleted" << std::endl;
+            std::cerr << "Node does not exist, no node is deleted" << std::endl;
             return false;
         } //endelse
     }

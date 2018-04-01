@@ -1,10 +1,45 @@
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <ctime>
+#include <set>
+
 // #include "skip_set.h"
 // #include "skip_set_forward.h"
 #include "skip_set_bidirectional.h"
 
 using namespace std;
+
+void speedTestDIY(int NoOfSets, int SetSize) {
+    clock_t begin = clock();
+    for (int i = 0; i < NoOfSets; i++) {
+        skip_set<int> DIY_test;
+        for (int j = 0; j < SetSize; j++) {
+            DIY_test.insert(j);
+        }
+    }
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    
+    cout << "****\tDIY-Set\tNumber of Sets:" << NoOfSets << " Size of each Set: " << SetSize << endl;
+    cout << elapsed_secs << " sec" << endl;
+}
+
+void speedTestSTL(int NoOfSets, int SetSize) {
+    clock_t begin = clock();
+    for (int i = 0; i < NoOfSets; i++) {
+        set<int> STL_test;
+        for (int j = 0; j < SetSize; j++) {
+            STL_test.insert(j);
+        }
+    }  
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    
+    cout << "****\tSTL-Set\tNumber of Sets:" << NoOfSets << " Size of each Set: " << SetSize << endl;
+    cout << elapsed_secs << " sec" << endl;
+}
+
 
 int main() {
 
@@ -112,6 +147,19 @@ int main() {
     for (auto it = setTest2.rbegin(); it != setTest2.rend(); --it) {
         cout << *it << endl;
     }
+
+
+    // speedTestDIY(10, 10000);
+    // speedTestDIY(100, 10000);
+    // speedTestDIY(1000, 10000);
+    // speedTestDIY(2000, 10000);
+    // speedTestDIY(3000, 10000);
+
+    // speedTestSTL(10, 10000);
+    // speedTestSTL(100, 10000);
+    // speedTestSTL(1000, 10000);
+    // speedTestSTL(2000, 10000);   
+    // speedTestSTL(3000, 10000);
 
     return 0;
 }
